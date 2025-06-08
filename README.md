@@ -1,10 +1,3 @@
-## Author: Author: Rodrigo Marins Piaba (Fanaticos4tech)
-
-## E-Mail: rodrigomarinsp@gmail.com / fanaticos4tech@gmail.com
-
-## GitHub: github.com/rodrigomarinsp/github-security-pipeline
-
-## Website: http://github.com/rodrigomarinsp/github-security-pipeline/index.html
 
 # 🛡️ GitHub Security Pipeline
 
@@ -14,11 +7,15 @@
 ![Security](https://img.shields.io/badge/Security-Enterprise-red.svg)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-Enabled-brightgreen.svg)
 
+
 > **Enterprise-grade security scanning for GitHub repositories**
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/example/github-security-pipeline/main/docs/images/shield-lock.png" alt="GitHub Security Pipeline" width="180" height="180">
-</p>
+
+- Author: Author: Rodrigo Marins Piaba (Fanaticos4tech)
+- E-Mail: rodrigomarinsp@gmail.com / fanaticos4tech@gmail.com
+- GitHub: github.com/rodrigomarinsp/github-security-pipeline
+- Website: http://github.com/rodrigomarinsp/github-security-pipeline/index.html
+
 
 ## 📋 Table of Contents
 
