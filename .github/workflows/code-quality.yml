@@ -1,0 +1,540 @@
+## Author: Author: Rodrigo Marins Piaba (Fanaticos4tech)
+
+## E-Mail: rodrigomarinsp@gmail.com / fanaticos4tech@gmail.com
+
+## GitHub: github.com/rodrigomarinsp/github-security-pipeline
+
+## Website: http://github.com/rodrigomarinsp/github-security-pipeline/index.html
+
+name: 🧹 Code Quality
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    - cron: '0 3 * * *'  # Run every day at 3 AM UTC
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  code-quality:
+    name: 📊 Static Code Analysis
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        language: [python, javascript, go, java]
+        include:
+          - language: python
+            extensions: '**/*.py'
+            linter: pylint
+          - language: javascript
+            extensions: '**/*.js,**/*.jsx,**/*.ts,**/*.tsx'
+            linter: eslint
+          - language: go
+            extensions: '**/*.go'
+            linter: golangci-lint
+          - language: java
+            extensions: '**/*.java'
+            linter: checkstyle
+            
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+        
+      - name: 🔍 Find files of language type
+        id: find-files
+        run: |
+          # Check if files of the current language type exist in the repository
+          IFS=',' read -ra PATTERNS <<< "${{ matrix.extensions }}"
+          FILES_FOUND=false
+          
+          for PATTERN in "${PATTERNS[@]}"; do
+            if compgen -G "$PATTERN" > /dev/null 2>&1; then
+              FILES_FOUND=true
+              break
+            fi
+          done
+          
+          echo "FILES_FOUND=$FILES_FOUND" >> $GITHUB_OUTPUT
+        shell: bash
+
+      # Setup for Python analysis
+      - name: 🐍 Set up Python
+        if: matrix.language == 'python' && steps.find-files.outputs.FILES_FOUND == 'true'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          
+      - name: 📦 Install Python dependencies
+        if: matrix.language == 'python' && steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint flake8 black mypy bandit
+          pip install -r requirements.txt || echo "No requirements.txt found"
+          
+      - name: 🧪 Run Python analysis
+        if: matrix.language == 'python' && steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          mkdir -p reports
+          
+          echo "Running Pylint..."
+          pylint --output-format=json --reports=y $(git ls-files '*.py') > reports/pylint-report.json || true
+          
+          echo "Running Flake8..."
+          flake8 --format=pylint --output-file=reports/flake8-report.txt $(git ls-files '*.py') || true
+          
+          echo "Running Black in check mode..."
+          black --check $(git ls-files '*.py') > reports/black-report.txt || true
+          
+          echo "Running MyPy for type checking..."
+          mypy --ignore-missing-imports --show-error-codes $(git ls-files '*.py') > reports/mypy-report.txt || true
+          
+          echo "Running Bandit security checks..."
+          bandit -r . -f json -o reports/bandit-report.json || true
+      
+      # Setup for JavaScript analysis
+      - name: 📄 Set up Node.js
+        if: matrix.language == 'javascript' && steps.find-files.outputs.FILES_FOUND == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          
+      - name: 📦 Install JavaScript dependencies
+        if: matrix.language == 'javascript' && steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          else
+            npm init -y
+            npm install --save-dev eslint prettier eslint-config-prettier eslint-plugin-security
+          fi
+          
+      - name: 🧪 Run JavaScript analysis
+        if: matrix.language == 'javascript' && steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          mkdir -p reports
+          
+          # Create basic eslint config if it doesn't exist
+          if [ ! -f .eslintrc.json ]; then
+            echo '{
+              "env": {
+                "browser": true,
+                "es2021": true,
+                "node": true
+              },
+              "extends": [
+                "eslint:recommended",
+                "plugin:security/recommended"
+              ],
+              "plugins": [
+                "security"
+              ],
+              "parserOptions": {
+                "ecmaVersion": "latest",
+                "sourceType": "module"
+              }
+            }' > .eslintrc.json
+          fi
+          
+          # Run ESLint
+          npx eslint --output-file reports/eslint-report.json --format json $(git ls-files '*.js' '*.jsx' '*.ts' '*.tsx') || true
+          
+          # Run Prettier in check mode
+          npx prettier --check $(git ls-files '*.js' '*.jsx' '*.ts' '*.tsx') > reports/prettier-report.txt || true
+          
+      # Setup for Go analysis
+      - name: 📑 Set up Go
+        if: matrix.language == 'go' && steps.find-files.outputs.FILES_FOUND == 'true'
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.19'
+          
+      - name: 📦 Install Go dependencies
+        if: matrix.language == 'go' && steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          go mod download || echo "No go.mod found"
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.50.1
+          
+      - name: 🧪 Run Go analysis
+        if: matrix.language == 'go' && steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          mkdir -p reports
+          
+          # Run Go vet
+          go vet ./... > reports/govet-report.txt || true
+          
+          # Run golangci-lint 
+          golangci-lint run --out-format json > reports/golangci-lint-report.json || true
+      
+      # Setup for Java analysis
+      - name: ☕ Set up Java
+        if: matrix.language == 'java' && steps.find-files.outputs.FILES_FOUND == 'true'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: 📦 Install Java dependencies
+        if: matrix.language == 'java' && steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          wget -q https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.3.3/checkstyle-10.3.3-all.jar
+          
+      - name: 🧪 Run Java analysis
+        if: matrix.language == 'java' && steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          mkdir -p reports
+          
+          # Run checkstyle
+          java -jar checkstyle-10.3.3-all.jar -c /google_checks.xml $(git ls-files '*.java') > reports/checkstyle-report.txt || true
+
+      # Generate combined report      
+      - name: 📊 Generate combined code quality report
+        if: steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          echo "# Code Quality Report for ${{ matrix.language }}" > reports/combined-report.md
+          echo "" >> reports/combined-report.md
+          echo "## Summary" >> reports/combined-report.md
+          echo "" >> reports/combined-report.md
+          
+          case "${{ matrix.language }}" in
+            python)
+              # Process Python reports
+              echo "### Pylint Summary" >> reports/combined-report.md
+              if [ -f reports/pylint-report.json ]; then
+                # Extract statistics from Pylint JSON output (simplified)
+                echo "Pylint output available in artifacts" >> reports/combined-report.md
+              else
+                echo "No Pylint report generated" >> reports/combined-report.md
+              fi
+              
+              echo "" >> reports/combined-report.md
+              echo "### Bandit Security Summary" >> reports/combined-report.md
+              if [ -f reports/bandit-report.json ]; then
+                # Count security issues by severity
+                HIGH=$(grep -c "HIGH" reports/bandit-report.json || echo "0")
+                MEDIUM=$(grep -c "MEDIUM" reports/bandit-report.json || echo "0")
+                LOW=$(grep -c "LOW" reports/bandit-report.json || echo "0")
+                echo "- High severity issues: $HIGH" >> reports/combined-report.md
+                echo "- Medium severity issues: $MEDIUM" >> reports/combined-report.md
+                echo "- Low severity issues: $LOW" >> reports/combined-report.md
+              else
+                echo "No Bandit report generated" >> reports/combined-report.md
+              fi
+              ;;
+              
+            javascript)
+              # Process JavaScript reports
+              echo "### ESLint Summary" >> reports/combined-report.md
+              if [ -f reports/eslint-report.json ]; then
+                ERRORS=$(grep -c ""severity":2" reports/eslint-report.json || echo "0")
+                WARNINGS=$(grep -c ""severity":1" reports/eslint-report.json || echo "0")
+                echo "- Errors: $ERRORS" >> reports/combined-report.md
+                echo "- Warnings: $WARNINGS" >> reports/combined-report.md
+              else
+                echo "No ESLint report generated" >> reports/combined-report.md
+              fi
+              ;;
+              
+            go)
+              # Process Go reports
+              echo "### Go Analysis Summary" >> reports/combined-report.md
+              if [ -f reports/golangci-lint-report.json ]; then
+                ISSUES=$(grep -c ""Text":" reports/golangci-lint-report.json || echo "0")
+                echo "- Issues found: $ISSUES" >> reports/combined-report.md
+              else
+                echo "No golangci-lint report generated" >> reports/combined-report.md
+              fi
+              ;;
+              
+            java)
+              # Process Java reports
+              echo "### Checkstyle Summary" >> reports/combined-report.md
+              if [ -f reports/checkstyle-report.txt ]; then
+                ERRORS=$(grep -c "ERROR" reports/checkstyle-report.txt || echo "0")
+                WARNINGS=$(grep -c "WARNING" reports/checkstyle-report.txt || echo "0")
+                echo "- Errors: $ERRORS" >> reports/combined-report.md
+                echo "- Warnings: $WARNINGS" >> reports/combined-report.md
+              else
+                echo "No Checkstyle report generated" >> reports/combined-report.md
+              fi
+              ;;
+          esac
+          
+          echo "" >> reports/combined-report.md
+          echo "## Recommendations" >> reports/combined-report.md
+          echo "" >> reports/combined-report.md
+          echo "Please review the detailed reports in the workflow artifacts for specific issues and recommendations." >> reports/combined-report.md
+          
+      - name: 📂 Upload analysis results
+        if: steps.find-files.outputs.FILES_FOUND == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-quality-${{ matrix.language }}-report
+          path: reports/
+          retention-days: 7
+
+      - name: 🔍 Extract results for PR comment
+        if: github.event_name == 'pull_request' && steps.find-files.outputs.FILES_FOUND == 'true'
+        id: results
+        run: |
+          # Calculate a simple quality score
+          SCORE=100  # Start with perfect score
+          
+          case "${{ matrix.language }}" in
+            python)
+              if [ -f reports/pylint-report.json ] && grep -q "error" reports/pylint-report.json; then
+                ERROR_COUNT=$(grep -c "error" reports/pylint-report.json)
+                SCORE=$((SCORE - ERROR_COUNT * 5))  # Deduct 5 points per error
+              fi
+              
+              if [ -f reports/bandit-report.json ]; then
+                HIGH=$(grep -c "HIGH" reports/bandit-report.json || echo "0")
+                MEDIUM=$(grep -c "MEDIUM" reports/bandit-report.json || echo "0")
+                SCORE=$((SCORE - HIGH * 10 - MEDIUM * 5))  # Deduct 10 points per high issue, 5 per medium
+              fi
+              ;;
+              
+            javascript)
+              if [ -f reports/eslint-report.json ]; then
+                ERRORS=$(grep -c ""severity":2" reports/eslint-report.json || echo "0")
+                WARNINGS=$(grep -c ""severity":1" reports/eslint-report.json || echo "0")
+                SCORE=$((SCORE - ERRORS * 5 - WARNINGS * 2))  # Deduct 5 per error, 2 per warning
+              fi
+              ;;
+              
+            go)
+              if [ -f reports/golangci-lint-report.json ]; then
+                ISSUES=$(grep -c ""Text":" reports/golangci-lint-report.json || echo "0")
+                SCORE=$((SCORE - ISSUES * 3))  # Deduct 3 points per issue
+              fi
+              ;;
+              
+            java)
+              if [ -f reports/checkstyle-report.txt ]; then
+                ERRORS=$(grep -c "ERROR" reports/checkstyle-report.txt || echo "0")
+                WARNINGS=$(grep -c "WARNING" reports/checkstyle-report.txt || echo "0")
+                SCORE=$((SCORE - ERRORS * 5 - WARNINGS * 2))  # Deduct 5 per error, 2 per warning
+              fi
+              ;;
+          esac
+          
+          # Ensure score doesn't go below 0
+          if [ $SCORE -lt 0 ]; then
+            SCORE=0
+          fi
+          
+          # Set output for next step
+          echo "QUALITY_SCORE=$SCORE" >> $GITHUB_OUTPUT
+          
+      - name: 💬 Comment on PR
+        if: github.event_name == 'pull_request' && steps.find-files.outputs.FILES_FOUND == 'true'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const score = Number('${{ steps.results.outputs.QUALITY_SCORE }}');
+            let scoreColor, recommendation;
+            
+            // Determine score color and recommendation based on score
+            if (score >= 90) {
+              scoreColor = '🟢';
+              recommendation = 'Excellent code quality! Keep up the good work.';
+            } else if (score >= 70) {
+              scoreColor = '🟡';
+              recommendation = 'Good code quality, but there's room for improvement. Please address the issues found.';
+            } else if (score >= 50) {
+              scoreColor = '🟠';
+              recommendation = 'Mediocre code quality. Several issues should be fixed before merging.';
+            } else {
+              scoreColor = '🔴';
+              recommendation = 'Poor code quality. Please fix the identified issues before this PR can be merged.';
+            }
+            
+            // Read the combined report
+            let reportContent;
+            try {
+              reportContent = fs.readFileSync('reports/combined-report.md', 'utf8');
+            } catch (error) {
+              reportContent = 'No detailed report available.';
+            }
+            
+            // Create comment body
+            const body = `## 🧹 Code Quality Analysis: ${scoreColor} ${score}/100
+            
+            ${recommendation}
+            
+            ### Details for ${{ matrix.language }}
+            
+            ${reportContent}
+            
+            [View full report in workflow artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+            
+            // Look for existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            
+            const commentMarker = '## 🧹 Code Quality Analysis:';
+            const existingComment = comments.find(comment => 
+              comment.user.login === 'github-actions[bot]' && 
+              comment.body.includes(commentMarker) &&
+              comment.body.includes(`Details for ${{ matrix.language }}`)
+            );
+            
+            // Update or create comment
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+      - name: 📝 Publish scan summary
+        if: steps.find-files.outputs.FILES_FOUND == 'true'
+        run: |
+          echo "### 🧹 Code Quality Results - ${{ matrix.language }}" >> $GITHUB_STEP_SUMMARY
+          
+          QUALITY_SCORE="${{ steps.results.outputs.QUALITY_SCORE }}"
+          if [ -z "$QUALITY_SCORE" ]; then
+            QUALITY_SCORE="N/A"
+          fi
+          
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+          echo "| Language | ${{ matrix.language }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Quality Score | $QUALITY_SCORE/100 |" >> $GITHUB_STEP_SUMMARY
+          
+          case "${{ matrix.language }}" in
+            python)
+              if [ -f reports/pylint-report.json ]; then
+                ERRORS=$(grep -c "error" reports/pylint-report.json || echo "0")
+                WARNINGS=$(grep -c "warning" reports/pylint-report.json || echo "0")
+                echo "| Pylint Errors | $ERRORS |" >> $GITHUB_STEP_SUMMARY
+                echo "| Pylint Warnings | $WARNINGS |" >> $GITHUB_STEP_SUMMARY
+              fi
+              
+              if [ -f reports/bandit-report.json ]; then
+                HIGH=$(grep -c "HIGH" reports/bandit-report.json || echo "0")
+                MEDIUM=$(grep -c "MEDIUM" reports/bandit-report.json || echo "0")
+                echo "| Security High | $HIGH |" >> $GITHUB_STEP_SUMMARY
+                echo "| Security Medium | $MEDIUM |" >> $GITHUB_STEP_SUMMARY
+              fi
+              ;;
+              
+            javascript)
+              if [ -f reports/eslint-report.json ]; then
+                ERRORS=$(grep -c ""severity":2" reports/eslint-report.json || echo "0")
+                WARNINGS=$(grep -c ""severity":1" reports/eslint-report.json || echo "0")
+                echo "| ESLint Errors | $ERRORS |" >> $GITHUB_STEP_SUMMARY
+                echo "| ESLint Warnings | $WARNINGS |" >> $GITHUB_STEP_SUMMARY
+              fi
+              ;;
+              
+            go)
+              if [ -f reports/golangci-lint-report.json ]; then
+                ISSUES=$(grep -c ""Text":" reports/golangci-lint-report.json || echo "0")
+                echo "| Go Issues | $ISSUES |" >> $GITHUB_STEP_SUMMARY
+              fi
+              ;;
+              
+            java)
+              if [ -f reports/checkstyle-report.txt ]; then
+                ERRORS=$(grep -c "ERROR" reports/checkstyle-report.txt || echo "0")
+                WARNINGS=$(grep -c "WARNING" reports/checkstyle-report.txt || echo "0")
+                echo "| Checkstyle Errors | $ERRORS |" >> $GITHUB_STEP_SUMMARY
+                echo "| Checkstyle Warnings | $WARNINGS |" >> $GITHUB_STEP_SUMMARY
+              fi
+              ;;
+          esac
+        shell: bash
+
+  codeql-analysis:
+    name: 🔬 CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    needs: code-quality
+      
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript', 'python', 'java', 'go', 'ruby', 'cpp']
+        
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: 🔍 Check for language files
+        id: check_files
+        run: |
+          case "${{ matrix.language }}" in
+            javascript)
+              EXTENSIONS=("js" "jsx" "ts" "tsx")
+              ;;
+            python)
+              EXTENSIONS=("py")
+              ;;
+            java)
+              EXTENSIONS=("java")
+              ;;
+            go)
+              EXTENSIONS=("go")
+              ;;
+            ruby)
+              EXTENSIONS=("rb")
+              ;;
+            cpp)
+              EXTENSIONS=("cpp" "cc" "cxx" "c" "h" "hpp")
+              ;;
+            *)
+              echo "Unknown language: ${{ matrix.language }}"
+              exit 1
+              ;;
+          esac
+          
+          FILES_FOUND=false
+          for EXT in "${EXTENSIONS[@]}"; do
+            if compgen -G "**/*.$EXT" > /dev/null 2>&1; then
+              FILES_FOUND=true
+              break
+            fi
+          done
+          
+          echo "FILES_FOUND=$FILES_FOUND" >> $GITHUB_OUTPUT
+        shell: bash
+      
+      - name: 🛠️ Initialize CodeQL
+        if: steps.check_files.outputs.FILES_FOUND == 'true'
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+          queries: +security-and-quality
+          
+      - name: 🔨 Autobuild
+        if: steps.check_files.outputs.FILES_FOUND == 'true'
+        uses: github/codeql-action/autobuild@v2
+        
+      - name: 🔎 Perform CodeQL Analysis
+        if: steps.check_files.outputs.FILES_FOUND == 'true'
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{ matrix.language }}"

@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Security Pipeline - Complete Setup Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .security-pattern { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M30 0L30 30L0 30L0 0L30 0ZM60 30L60 60L30 60L30 30L60 30Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .code-block { background: #1a202c; border-radius: 8px; padding: 1rem; color: #e2e8f0; font-family: 'Courier New', monospace; }
+        .workflow-step { transition: all 0.3s ease; }
+        .workflow-step:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .feature-card { background: linear-gradient(145deg, #ffffff, #f7fafc); border: 1px solid #e2e8f0; }
+        .author-card { background: linear-gradient(145deg, #edf2f7, #e2e8f0); }
+        .timeline-item::before { content: ''; position: absolute; left: -6px; top: 6px; width: 12px; height: 12px; background: #667eea; border-radius: 50%; }
+        .timeline-line { border-left: 2px solid #e2e8f0; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Header Section -->
+         <header class="gradient-bg text-white py-16">
+         <div class="container mx-auto px-6">
+            <div class="text-center">
+                <i class="fas fa-shield-alt text-6xl mb-6 opacity-90"></i>
+                <h1 class="text-5xl font-bold mb-4">GitHub Security Pipeline</h1>
+                <p class="text-xl opacity-90 max-w-3xl mx-auto">Complete Guide to Implementing Automated Security Checks Across All Your Repositories</p>
+            </div>
+    
+            <br/><br/><br/>      
+            <div class="flex justify-center space-x-4 mb-8">
+                <span class="bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                    <i class="fas fa-check mr-2"></i>Production Ready
+                </span>
+                <span class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                    <i class="fas fa-users mr-2"></i>Organization-Wide
+                </span>
+                <span class="bg-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                    <i class="fas fa-robot mr-2"></i>Fully Automated
+                </span>
+            </div>   
+        </div>
+    </header>
+    
+
+    <!-- Author Information -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="author-card rounded-lg p-8 max-w-4xl mx-auto">
+                <div class="flex items-center justify-center mb-6">
+                    <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-6">
+                        RM
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                            <i class="fas fa-user-shield mr-3 text-blue-600"></i>
+                            Author Information
+                        </h2>
+                        <p class="text-lg text-gray-600">Enterprise Security Solutions Architect</p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-user text-blue-600 w-6 mr-3"></i>
+                            <span class="font-semibold">Name:</span>
+                            <span class="ml-2">Rodrigo Marins Piaba (Fanaticos4tech)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-green-600 w-6 mr-3"></i>
+                            <span class="font-semibold">Email:</span>
+                            <span class="ml-2">rodrigomarinsp@gmail.com</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-green-600 w-6 mr-3"></i>
+                            <span class="font-semibold">Business:</span>
+                            <span class="ml-2">fanaticos4tech@gmail.com</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fab fa-github text-gray-800 w-6 mr-3"></i>
+                            <span class="font-semibold">GitHub:</span>
+                            <a href="https://github.com/rodrigomarinsp" class="ml-2 text-blue-600 hover:underline">rodrigomarinsp</a>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fab fa-instagram text-pink-600 w-6 mr-3"></i>
+                            <span class="font-semibold">Instagram:</span>
+                            <a href="https://instagram.com/fanaticos4tech" class="ml-2 text-blue-600 hover:underline">@fanaticos4tech</a>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-code text-purple-600 w-6 mr-3"></i>
+                            <span class="font-semibold">Specialization:</span>
+                            <span class="ml-2">DevSecOps & Security Automation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Table of Contents -->
+    <section class="py-8 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <i class="fas fa-list-ul mr-3"></i>
+                Table of Contents
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="font-bold text-lg mb-4 text-blue-600">Getting Started</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#overview" class="hover:text-blue-600">Project Overview</a></li>
+                        <li><a href="#features" class="hover:text-blue-600">Key Features</a></li>
+                        <li><a href="#requirements" class="hover:text-blue-600">Requirements</a></li>
+                        <li><a href="#quick-start" class="hover:text-blue-600">Quick Start Guide</a></li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="font-bold text-lg mb-4 text-green-600">Implementation</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#installation" class="hover:text-blue-600">Installation Methods</a></li>
+                        <li><a href="#configuration" class="hover:text-blue-600">Configuration Guide</a></li>
+                        <li><a href="#workflows" class="hover:text-blue-600">Security Workflows</a></li>
+                        <li><a href="#troubleshooting" class="hover:text-blue-600">Troubleshooting</a></li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h3 class="font-bold text-lg mb-4 text-purple-600">Project Info</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#contributing" class="hover:text-blue-600">Contributing</a></li>
+                        <li><a href="#changelog" class="hover:text-blue-600">Changelog</a></li>
+                        <li><a href="#license" class="hover:text-blue-600">License</a></li>
+                        <li><a href="#support" class="hover:text-blue-600">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Overview -->
+    <section id="overview" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-eye mr-3 text-blue-600"></i>
+                Project Overview
+            </h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
+                    <h3 class="text-xl font-bold text-blue-800 mb-3">What is GitHub Security Pipeline?</h3>
+                    <p class="text-blue-700 leading-relaxed">
+                        The GitHub Security Pipeline is an enterprise-grade security automation solution that provides comprehensive security scanning, vulnerability detection, and compliance monitoring for all repositories in your GitHub organization. It implements DevSecOps best practices with zero-touch deployment and intelligent threat detection.
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="feature-card rounded-lg p-6 shadow-md">
+                        <h4 class="text-lg font-bold mb-4 text-green-600">
+                            <i class="fas fa-shield-virus mr-2"></i>
+                            Comprehensive Protection
+                        </h4>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Secret detection and prevention</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Vulnerability scanning</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Code quality analysis</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>License compliance monitoring</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card rounded-lg p-6 shadow-md">
+                        <h4 class="text-lg font-bold mb-4 text-purple-600">
+                            <i class="fas fa-cogs mr-2"></i>
+                            Enterprise Features
+                        </h4>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Organization-wide deployment</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Centralized policy management</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Real-time notifications</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Compliance reporting</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-8">
+                    <h4 class="text-xl font-bold mb-6 text-center">
+                        <i class="fas fa-sitemap mr-2 text-blue-600"></i>
+                        Security Pipeline Architecture
+                    </h4>
+                    <div class="code-block text-sm">
+<pre>
+┌─────────────────────────────────────────────────────────────────┐
+│                     GitHub Organization                          │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
+│  │   Repository A   │  │   Repository B   │  │   Repository C   │  │
+│  │                 │  │                 │  │                 │  │
+│  │ ┌─────────────┐ │  │ ┌─────────────┐ │  │ ┌─────────────┐ │  │
+│  │ │Security     │ │  │ │Security     │ │  │ │Security     │ │  │
+│  │ │Workflows    │ │  │ │Workflows    │ │  │ │Workflows    │ │  │
+│  │ └─────────────┘ │  │ └─────────────┘ │  │ └─────────────┘ │  │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+           │                    │                    │
+           ▼                    ▼                    ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Security Pipeline Engine                      │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌─────────┐ │
+│  │   Gitleaks   │ │  Dependabot  │ │    CodeQL    │ │ Custom  │ │
+│  │   Scanner    │ │   Scanner    │ │   Scanner    │ │ Rules   │ │
+│  └──────────────┘ └──────────────┘ └──────────────┘ └─────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+           │
+           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Alert & Notification System                   │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────┐ │
+│  │    Slack    │  │    Email    │  │    Teams    │  │  JIRA   │ │
+│  │Integration  │  │Notifications│  │Integration  │  │  Ticket │ │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section id="features" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-star mr-3 text-yellow-500"></i>
+                Key Features
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="workflow-step bg-white rounded-lg p-6 shadow-md border-l-4 border-blue-500">
+                    <div class="text-blue-600 text-3xl mb-4">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Secret Detection</h3>
+                    <p class="text-gray-600 text-sm">Advanced pattern matching to detect API keys, passwords, tokens, and other sensitive data before they reach production.</p>
+                    <div class="mt-4 text-xs text-blue-600">
+                        <span class="bg-blue-100 px-2 py-1 rounded">Gitleaks</span>
+                        <span class="bg-blue-100 px-2 py-1 rounded ml-1">Custom Rules</span>
+                    </div>
+                </div>
+                
+                <div class="workflow-step bg-white rounded-lg p-6 shadow-md border-l-4 border-green-500">
+                    <div class="text-green-600 text-3xl mb-4">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Vulnerability Scanning</h3>
+                    <p class="text-gray-600 text-sm">Automated dependency scanning across multiple languages to identify and remediate security vulnerabilities.</p>
+                    <div class="mt-4 text-xs text-green-600">
+                        <span class="bg-green-100 px-2 py-1 rounded">Dependabot</span>
+                        <span class="bg-green-100 px-2 py-1 rounded ml-1">Snyk</span>
+                    </div>
+                </div>
+
+                <div class="workflow-step bg-white rounded-lg p-6 shadow-md border-l-4 border-purple-500">
+                    <div class="text-purple-600 text-3xl mb-4">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Code Quality Analysis</h3>
+                    <p class="text-gray-600 text-sm">Deep semantic analysis to identify security hotspots, code smells, and potential vulnerabilities in your codebase.</p>
+                    <div class="mt-4 text-xs text-purple-600">
+                        <span class="bg-purple-100 px-2 py-1 rounded">CodeQL</span>
+                        <span class="bg-purple-100 px-2 py-1 rounded ml-1">SonarCloud</span>
+                    </div>
+                </div>
+
+                <div class="workflow-step bg-white rounded-lg p-6 shadow-md border-l-4 border-red-500">
+                    <div class="text-red-600 text-3xl mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Real-time Protection</h3>
+                    <p class="text-gray-600 text-sm">Continuous monitoring and instant alerts when security issues are detected in any repository.</p>
+                    <div class="mt-4 text-xs text-red-600">
+                        <span class="bg-red-100 px-2 py-1 rounded">GitHub Actions</span>
+                        <span class="bg-red-100 px-2 py-1 rounded ml-1">Webhooks</span>
+                    </div>
+                </div>
+
+                <div class="workflow-step bg-white rounded-lg p-6 shadow-md border-l-4 border-yellow-500">
+                    <div class="text-yellow-600 text-3xl mb-4">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">License Compliance</h3>
+                    <p class="text-gray-600 text-sm">Automated tracking and compliance monitoring for open source licenses across all dependencies.</p>
+                    <div class="mt-4 text-xs text-yellow-600">
+                        <span class="bg-yellow-100 px-2 py-1 rounded">FOSSA</span>
+                        <span class="bg-yellow-100 px-2 py-1 rounded ml-1">License Checker</span>
+                    </div>
+                </div>
+
+                <div class="workflow-step bg-white rounded-lg p-6 shadow-md border-l-4 border-indigo-500">
+                    <div class="text-indigo-600 text-3xl mb-4">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Enterprise Integration</h3>
+                    <p class="text-gray-600 text-sm">Seamless integration with enterprise tools like JIRA, Slack, Teams, and SIEM platforms for complete security workflow.</p>
+                    <div class="mt-4 text-xs text-indigo-600">
+                        <span class="bg-indigo-100 px-2 py-1 rounded">REST API</span>
+                        <span class="bg-indigo-100 px-2 py-1 rounded ml-1">Webhooks</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Requirements -->
+    <section id="requirements" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-clipboard-check mr-3 text-green-600"></i>
+                System Requirements
+            </h2>
+            <div class="max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-8 mb-12">
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-8">
+                        <h3 class="text-2xl font-bold mb-6 text-blue-800">
+                            <i class="fas fa-server mr-3"></i>
+                            Infrastructure Requirements
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span><strong>GitHub Organization:</strong> Admin access required</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span><strong>GitHub Actions:</strong> Enabled for organization</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span><strong>Secret Scanning:</strong> GitHub Advanced Security</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span><strong>Dependabot:</strong> Enabled for vulnerability alerts</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-8">
+                        <h3 class="text-2xl font-bold mb-6 text-green-800">
+                            <i class="fas fa-tools mr-3"></i>
+                            Tools & Dependencies
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span><strong>Git CLI:</strong> Version 2.25+ recommended</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span><strong>GitHub CLI:</strong> For automated setup</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span><strong>Bash/PowerShell:</strong> For running setup scripts</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span><strong>jq:</strong> JSON processing utility</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8">
+                    <h4 class="text-lg font-bold text-yellow-800 mb-3">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Important Prerequisites
+                    </h4>
+                    <ul class="text-yellow-700 space-y-2">
+                        <li><i class="fas fa-arrow-right mr-2"></i>Organization owner permissions or security admin role</li>
+                        <li><i class="fas fa-arrow-right mr-2"></i>GitHub Advanced Security license for private repositories</li>
+                        <li><i class="fas fa-arrow-right mr-2"></i>Network access to GitHub API and third-party security services</li>
+                        <li><i class="fas fa-arrow-right mr-2"></i>Notification channels configured (Slack, Teams, email)</li>
+                    </ul>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Component</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Minimum Version</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recommended</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">GitHub CLI</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.0.0</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Latest</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Organization setup automation</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Git</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.25.0</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.40.0+</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Repository management</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Gitleaks</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8.0.0</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Latest</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Secret detection</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">CodeQL</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.12.0</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Latest</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">Code analysis</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Guide -->
+    <section id="quick-start" class="py-16 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-rocket mr-3 text-blue-600"></i>
+                Quick Start Guide
+            </h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6 text-center">
+                        <i class="fas fa-play-circle mr-2 text-green-600"></i>
+                        Get Started in 3 Steps
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">1</div>
+                            <h4 class="font-bold mb-2">Download</h4>
+                            <p class="text-sm text-gray-600">Clone the security pipeline repository and review the configuration files</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">2</div>
+                            <h4 class="font-bold mb-2">Configure</h4>
+                            <p class="text-sm text-gray-600">Run the setup script to configure your organization settings and security policies</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">3</div>
+                            <h4 class="font-bold mb-2">Deploy</h4>
+                            <p class="text-sm text-gray-600">Apply security workflows to all repositories and start monitoring threats</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 rounded-lg p-6 text-green-400 font-mono text-sm mb-8">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-terminal mr-2"></i>
+                        <span class="text-white">Installation Commands</span>
+                    </div>
+                    <div class="space-y-2">
+                        <div><span class="text-blue-400">$</span> git clone https://github.com/your-org/github-security-pipeline.git</div>
+                        <div><span class="text-blue-400">$</span> cd github-security-pipeline</div>
+                        <div><span class="text-blue-400">$</span> chmod +x setup-organization.sh</div>
+                        <div><span class="text-blue-400">$</span> ./setup-organization.sh --org your-organization</div>
+                        <div><span class="text-blue-400">$</span> ./validate-security.sh</div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <h4 class="font-bold text-lg mb-4 text-blue-600">
+                            <i class="fas fa-user mr-2"></i>
+                            Single Repository Setup
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-4">Perfect for testing or individual projects</p>
+                        <ul class="text-sm space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Copy workflow files to .github/workflows/</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Add configuration files to repository root</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Enable GitHub Advanced Security</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Configure notification settings</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <h4 class="font-bold text-lg mb-4 text-purple-600">
+                            <i class="fas fa-building mr-2"></i>
+                            Organization-wide Setup
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-4">Enterprise deployment for all repositories</p>
+                        <ul class="text-sm space-y-2">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Create .github repository in organization</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Deploy workflow templates</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Configure organization security settings</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Set up centralized monitoring</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Methods -->
+    <section id="installation" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-download mr-3 text-green-600"></i>
+                Installation Methods
+            </h2>
+            <div class="max-w-6xl mx-auto">
+                <!-- Method 1: Manual Installation -->
+                <div class="mb-12 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-800">
+                        <i class="fas fa-hand-paper mr-3"></i>
+                        Method 1: Manual Installation
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold mb-4">Step-by-Step Process:</h4>
+                            <ol class="space-y-3 text-sm">
+                                <li class="flex items-start">
+                                    <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">1</span>
+                                    <span>Create or access your organization's <code class="bg-gray-200 px-2 py-1 rounded">.github</code> repository</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">2</span>
+                                    <span>Download all security workflow files and configuration templates</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">3</span>
+                                    <span>Customize configuration files for your organization's needs</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">4</span>
+                                    <span>Upload files to the correct directory structure</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-0.5">5</span>
+                                    <span>Enable security features in organization settings</span>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="font-bold mb-4 text-green-600">✅ Best for:</h4>
+                            <ul class="space-y-2 text-sm mb-4">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Small teams or organizations</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Custom configuration requirements</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Learning and understanding the system</li>
+                            </ul>
+                            <h4 class="font-bold mb-4 text-orange-600">⚠️ Considerations:</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li><i class="fas fa-exclamation-triangle text-orange-500 mr-2"></i>Requires manual updates</li>
+                                <li><i class="fas fa-exclamation-triangle text-orange-500 mr-2"></i>More time-consuming setup</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Method 2: Automated Script -->
+                <div class="mb-12 bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-green-800">
+                        <i class="fas fa-robot mr-3"></i>
+                        Method 2: Automated Script Installation
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold mb-4">Quick Setup Commands:</h4>
+                            <div class="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm mb-4">
+                                <div>$ curl -sSL https://raw.githubusercontent.com/</div>
+                                <div>&nbsp;&nbsp;your-org/github-security-pipeline/</div>
+                                <div>&nbsp;&nbsp;main/setup-organization.sh | bash</div>
+                            </div>
+                            <h4 class="font-bold mb-4">Interactive Setup:</h4>
+                            <div class="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm">
+                                <div>$ git clone &lt;repository&gt;</div>
+                                <div>$ cd github-security-pipeline</div>
+                                <div>$ ./setup-organization.sh --interactive</div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="font-bold mb-4 text-green-600">✅ Advantages:</h4>
+                            <ul class="space-y-2 text-sm mb-4">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Fully automated deployment</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Error handling and validation</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Consistent configuration</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Rollback capabilities</li>
+                            </ul>
+                            <h4 class="font-bold mb-4 text-blue-600">🛠️ Features:</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li><i class="fas fa-cog text-blue-500 mr-2"></i>Prerequisites checking</li>
+                                <li><i class="fas fa-cog text-blue-500 mr-2"></i>Organization permission validation</li>
+                                <li><i class="fas fa-cog text-blue-500 mr-2"></i>Automatic workflow deployment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Method 3: Enterprise Template -->
+                <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-800">
+                        <i class="fas fa-building mr-3"></i>
+                        Method 3: Enterprise Template Deployment
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold mb-4">Enterprise Features:</h4>
+                            <ul class="space-y-3 text-sm">
+                                <li class="flex items-start">
+                                    <i class="fas fa-shield-alt text-purple-600 mr-3 mt-1"></i>
+                                    <span><strong>Repository Templates:</strong> Pre-configured security templates for new repositories</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-users text-purple-600 mr-3 mt-1"></i>
+                                    <span><strong>Team Management:</strong> Automated security team assignments and permissions</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-chart-line text-purple-600 mr-3 mt-1"></i>
+                                    <span><strong>Analytics:</strong> Organization-wide security metrics and reporting</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-plug text-purple-600 mr-3 mt-1"></i>
+                                    <span><strong>Integration:</strong> SIEM, SOAR, and enterprise security tools</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-lg p-6">
+                            <h4 class="font-bold mb-4 text-purple-600">🏢 Enterprise Benefits:</h4>
+                            <ul class="space-y-2 text-sm mb-4">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Centralized policy management</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Compliance reporting automation</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Advanced threat intelligence</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Multi-tenancy support</li>
+                            </ul>
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <p class="text-sm text-purple-700">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    <strong>Contact us</strong> for enterprise deployment assistance and custom security policy development.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Configuration Guide -->
+    <section id="configuration" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-cogs mr-3 text-blue-600"></i>
+                Configuration Guide
+            </h2>
+            <div class="max-w-6xl mx-auto space-y-12">
+                
+                <!-- Gitleaks Configuration -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-blue-800">
+                        <i class="fas fa-key mr-3"></i>
+                        Secret Detection (.gitleaks.toml)
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold mb-4">Configuration Options:</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i><strong>Detection Rules:</strong> AWS keys, GitHub tokens, API keys</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i><strong>Allowlists:</strong> False positive management</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i><strong>Custom Patterns:</strong> Organization-specific secrets</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i><strong>Path Exclusions:</strong> Test files, documentation</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-xs overflow-x-auto">
+<pre>
+[allowlist]
+description = "Global allowlist"
+paths = [
+    '''.*test.*''',
+    '''.*\.md''',
+    '''.*\.txt'''
+]
+
+[[rules]]
+description = "AWS Access Key"
+id = "aws-access-key"
+regex = '''AKIA[0-9A-Z]{16}'''
+tags = ["key", "AWS"]
+severity = "high"
+
+[[rules]]
+description = "GitHub Token"
+id = "github-token"
+regex = '''ghp_[0-9a-zA-Z]{36}'''
+tags = ["key", "GitHub"]
+severity = "critical"
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dependabot Configuration -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-green-800">
+                        <i class="fas fa-bug mr-3"></i>
+                        Dependency Scanning (dependabot.yml)
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold mb-4">Supported Ecosystems:</h4>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <div class="flex items-center">
+                                    <i class="fab fa-js-square text-yellow-500 mr-2"></i>
+                                    <span>npm (JavaScript)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fab fa-python text-blue-500 mr-2"></i>
+                                    <span>pip (Python)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fab fa-java text-red-500 mr-2"></i>
+                                    <span>maven (Java)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-gem text-red-600 mr-2"></i>
+                                    <span>bundler (Ruby)</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fab fa-docker text-blue-600 mr-2"></i>
+                                    <span>docker</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-code text-cyan-500 mr-2"></i>
+                                    <span>go modules</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-xs overflow-x-auto">
+<pre>
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    pull-request-branch-name:
+      separator: "/"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+    reviewers:
+      - "security-team"
+    open-pull-requests-limit: 5
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CodeQL Configuration -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-800">
+                        <i class="fas fa-code mr-3"></i>
+                        Code Analysis (codeql.yml)
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold mb-4">Analysis Features:</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li><i class="fas fa-search text-purple-500 mr-2"></i><strong>Security Queries:</strong> OWASP Top 10, CWE coverage</li>
+                                <li><i class="fas fa-chart-bar text-purple-500 mr-2"></i><strong>Quality Queries:</strong> Code smells, maintainability</li>
+                                <li><i class="fas fa-clock text-purple-500 mr-2"></i><strong>Scheduled Scans:</strong> Weekly deep analysis</li>
+                                <li><i class="fas fa-filter text-purple-500 mr-2"></i><strong>Path Filters:</strong> Focus on critical code paths</li>
+                            </ul>
+                            <div class="mt-6 bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <h5 class="font-bold text-purple-800 mb-2">Supported Languages:</h5>
+                                <div class="text-sm text-purple-700">
+                                    JavaScript, TypeScript, Python, Java, C#, C++, Go, Ruby, Swift, Kotlin
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-xs overflow-x-auto">
+<pre>
+queries:
+  - security-and-quality
+  - security-extended
+
+paths-ignore:
+  - '**/test/**'
+  - '**/tests/**'
+  - '**/node_modules/**'
+  - '**/vendor/**'
+
+paths:
+  - 'src/**'
+  - 'lib/**'
+  - 'app/**'
+
+languages:
+  - javascript
+  - python
+  - java
+  - go
+
+schedule:
+  - cron: '0 2 * * 1'  # Monday 2 AM
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Workflows -->
+    <section id="workflows" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-project-diagram mr-3 text-purple-600"></i>
+                Security Workflows
+            </h2>
+            <div class="max-w-6xl mx-auto">
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-6 text-center">
+                        <div class="text-3xl mb-3">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Security Scan</h3>
+                        <p class="text-sm opacity-90">Comprehensive security analysis on every push</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg p-6 text-center">
+                        <div class="text-3xl mb-3">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Secret Scan</h3>
+                        <p class="text-sm opacity-90">Detect and prevent secret leaks</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg p-6 text-center">
+                        <div class="text-3xl mb-3">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Dependency Check</h3>
+                        <p class="text-sm opacity-90">Vulnerability scanning for dependencies</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg p-6 text-center">
+                        <div class="text-3xl mb-3">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Code Quality</h3>
+                        <p class="text-sm opacity-90">Static analysis and quality checks</p>
+                    </div>
+                </div>
+
+                <!-- Workflow Details -->
+                <div class="space-y-8">
+                    <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-8">
+                        <h3 class="text-2xl font-bold mb-6 text-blue-800">
+                            <i class="fas fa-shield-alt mr-3"></i>
+                            Security Scan Workflow
+                        </h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="bg-white rounded-lg p-4">
+                                <h4 class="font-bold mb-3 text-blue-600">Triggers</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li><i class="fas fa-arrow-right text-blue-500 mr-2"></i>Push to main/master</li>
+                                    <li><i class="fas fa-arrow-right text-blue-500 mr-2"></i>Pull request creation</li>
+                                    <li><i class="fas fa-arrow-right text-blue-500 mr-2"></i>Scheduled (daily)</li>
+                                    <li><i class="fas fa-arrow-right text-blue-500 mr-2"></i>Manual dispatch</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white rounded-lg p-4">
+                                <h4 class="font-bold mb-3 text-green-600">Security Checks</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Secret scanning</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Vulnerability assessment</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>License compliance</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Security hotspots</li>
+                                </ul>
+                            </div>
+                            <div class="bg-white rounded-lg p-4">
+                                <h4 class="font-bold mb-3 text-purple-600">Actions</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li><i class="fas fa-bell text-purple-500 mr-2"></i>Slack notifications</li>
+                                    <li><i class="fas fa-bug text-purple-500 mr-2"></i>JIRA ticket creation</li>
+                                    <li><i class="fas fa-ban text-red-500 mr-2"></i>Block dangerous commits</li>
+                                    <li><i class="fas fa-file-alt text-purple-500 mr-2"></i>Security reports</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-8">
+                        <h3 class="text-2xl font-bold mb-6 text-green-800">
+                            <i class="fas fa-key mr-3"></i>
+                            Secret Detection Workflow
+                        </h3>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="font-bold mb-4">Detection Capabilities:</h4>
+                                <div class="grid grid-cols-2 gap-3 text-sm">
+                                    <div class="bg-white rounded p-3">
+                                        <i class="fab fa-aws text-orange-500 mr-2"></i>
+                                        <span>AWS Keys</span>
+                                    </div>
+                                    <div class="bg-white rounded p-3">
+                                        <i class="fab fa-github text-gray-800 mr-2"></i>
+                                        <span>GitHub Tokens</span>
+                                    </div>
+                                    <div class="bg-white rounded p-3">
+                                        <i class="fas fa-key text-blue-500 mr-2"></i>
+                                        <span>API Keys</span>
+                                    </div>
+                                    <div class="bg-white rounded p-3">
+                                        <i class="fas fa-database text-green-500 mr-2"></i>
+                                        <span>DB Passwords</span>
+                                    </div>
+                                    <div class="bg-white rounded p-3">
+                                        <i class="fas fa-lock text-purple-500 mr-2"></i>
+                                        <span>SSH Keys</span>
+                                    </div>
+                                    <div class="bg-white rounded p-3">
+                                        <i class="fas fa-certificate text-red-500 mr-2"></i>
+                                        <span>Certificates</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg p-6">
+                                <h4 class="font-bold mb-4 text-red-600">🚨 Response Actions:</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li><i class="fas fa-ban text-red-500 mr-2"></i>Immediate commit blocking</li>
+                                    <li><i class="fas fa-bell text-orange-500 mr-2"></i>Security team notification</li>
+                                    <li><i class="fas fa-history text-blue-500 mr-2"></i>Historical scan on detection</li>
+                                    <li><i class="fas fa-shield-alt text-green-500 mr-2"></i>Quarantine recommendations</li>
+                                </ul>
+                                <div class="mt-4 bg-red-50 border border-red-200 rounded p-3">
+                                    <p class="text-xs text-red-700">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        Critical secrets automatically trigger incident response procedures
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section id="troubleshooting" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-tools mr-3 text-orange-600"></i>
+                Troubleshooting Guide
+            </h2>
+            <div class="max-w-6xl mx-auto space-y-8">
+                
+                <!-- Common Issues -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-orange-800">
+                        <i class="fas fa-exclamation-triangle mr-3"></i>
+                        Common Issues & Solutions
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="border-l-4 border-red-500 pl-6">
+                            <h4 class="font-bold text-red-700 mb-2">Workflow Permissions Error</h4>
+                            <p class="text-sm text-gray-600 mb-3">
+                                <strong>Error:</strong> "Resource not accessible by integration" or permission denied
+                            </p>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h5 class="font-bold mb-2">Solution:</h5>
+                                <ul class="text-sm space-y-1">
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Verify GitHub Actions is enabled for the organization</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Check workflow permissions in repository settings</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Ensure GitHub Advanced Security is licensed</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Verify organization security policies allow workflows</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="border-l-4 border-yellow-500 pl-6">
+                            <h4 class="font-bold text-yellow-700 mb-2">Secret Scanning False Positives</h4>
+                            <p class="text-sm text-gray-600 mb-3">
+                                <strong>Issue:</strong> Test data or documentation flagged as secrets
+                            </p>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h5 class="font-bold mb-2">Solution:</h5>
+                                <div class="bg-gray-900 rounded p-3 text-green-400 font-mono text-xs">
+<pre>
+# Add to .gitleaks.toml
+[allowlist]
+paths = [
+    '''.*test.*''',
+    '''.*\.md''',
+    '''.*example.*''',
+    '''docs/.*'''
+]
+regexes = [
+    '''example-key-.*''',
+    '''test-token-.*'''
+]
+</pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-l-4 border-blue-500 pl-6">
+                            <h4 class="font-bold text-blue-700 mb-2">CodeQL Analysis Timeout</h4>
+                            <p class="text-sm text-gray-600 mb-3">
+                                <strong>Issue:</strong> Large repositories causing analysis timeouts
+                            </p>
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <h5 class="font-bold mb-2">Solution:</h5>
+                                <ul class="text-sm space-y-1">
+                                    <li><i class="fas fa-filter text-blue-500 mr-2"></i>Add path filters to exclude non-critical directories</li>
+                                    <li><i class="fas fa-clock text-blue-500 mr-2"></i>Increase timeout values in workflow configuration</li>
+                                    <li><i class="fas fa-cut text-blue-500 mr-2"></i>Split analysis into smaller chunks</li>
+                                    <li><i class="fas fa-server text-blue-500 mr-2"></i>Use self-hosted runners for large repositories</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diagnostic Tools -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-green-800">
+                        <i class="fas fa-stethoscope mr-3"></i>
+                        Diagnostic Tools
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold mb-4">Validation Script</h4>
+                            <p class="text-sm text-gray-600 mb-4">
+                                Use the included validation script to check your security pipeline configuration:
+                            </p>
+                            <div class="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm">
+                                <div>$ ./validate-security.sh</div>
+                                <div>$ ./validate-security.sh --verbose</div>
+                                <div>$ ./validate-security.sh --fix</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-4">Health Check Commands</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="bg-blue-50 border border-blue-200 rounded p-3">
+                                    <strong>Check GitHub CLI access:</strong>
+                                    <code class="block mt-1 text-xs">gh auth status</code>
+                                </div>
+                                <div class="bg-green-50 border border-green-200 rounded p-3">
+                                    <strong>Verify organization permissions:</strong>
+                                    <code class="block mt-1 text-xs">gh api orgs/YOUR_ORG</code>
+                                </div>
+                                <div class="bg-purple-50 border border-purple-200 rounded p-3">
+                                    <strong>List security features:</strong>
+                                    <code class="block mt-1 text-xs">gh api orgs/YOUR_ORG/security-managers</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Optimization -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold mb-6 text-purple-800">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Performance Optimization
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="bg-blue-50 rounded-lg p-6">
+                            <h4 class="font-bold text-blue-700 mb-4">
+                                <i class="fas fa-rocket mr-2"></i>
+                                Speed Optimization
+                            </h4>
+                            <ul class="text-sm space-y-2">
+                                <li><i class="fas fa-cache text-blue-500 mr-2"></i>Enable dependency caching</li>
+                                <li><i class="fas fa-filter text-blue-500 mr-2"></i>Use path-based triggers</li>
+                                <li><i class="fas fa-parallel text-blue-500 mr-2"></i>Parallel job execution</li>
+                                <li><i class="fas fa-server text-blue-500 mr-2"></i>Self-hosted runners</li>
+                            </ul>
+                        </div>
+                        <div class="bg-green-50 rounded-lg p-6">
+                            <h4 class="font-bold text-green-700 mb-4">
+                                <i class="fas fa-memory mr-2"></i>
+                                Resource Management
+                            </h4>
+                            <ul class="text-sm space-y-2">
+                                <li><i class="fas fa-clock text-green-500 mr-2"></i>Timeout configuration</li>
+                                <li><i class="fas fa-limit text-green-500 mr-2"></i>Concurrent job limits</li>
+                                <li><i class="fas fa-trash text-green-500 mr-2"></i>Artifact cleanup</li>
+                                <li><i class="fas fa-chart-line text-green-500 mr-2"></i>Usage monitoring</li>
+                            </ul>
+                        </div>
+                        <div class="bg-purple-50 rounded-lg p-6">
+                            <h4 class="font-bold text-purple-700 mb-4">
+                                <i class="fas fa-shield-alt mr-2"></i>
+                                Security Tuning
+                            </h4>
+                            <ul class="text-sm space-y-2">
+                                <li><i class="fas fa-filter text-purple-500 mr-2"></i>Rule optimization</li>
+                                <li><i class="fas fa-bullseye text-purple-500 mr-2"></i>False positive reduction</li>
+                                <li><i class="fas fa-bell text-purple-500 mr-2"></i>Alert prioritization</li>
+                                <li><i class="fas fa-graduation-cap text-purple-500 mr-2"></i>Team training</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contributing Section -->
+    <section id="contributing" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-hands-helping mr-3 text-blue-600"></i>
+                Contributing to the Project
+            </h2>
+            <div class="max-w-6xl mx-auto">
+                
+                <!-- Ways to Contribute -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-6 text-center">
+                        <div class="text-3xl mb-3">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Bug Reports</h3>
+                        <p class="text-sm opacity-90">Help us identify and fix issues</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg p-6 text-center">
+                        <div class="text-3xl mb-3">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Feature Requests</h3>
+                        <p class="text-sm opacity-90">Suggest new security features</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg p-6 text-center">
+                        <div class="text-3xl mb-3">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Code Contributions</h3>
+                        <p class="text-sm opacity-90">Submit pull requests</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg p-6 text-center">
+                        <div class="text-3xl mb-3">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Documentation</h3>
+                        <p class="text-sm opacity-90">Improve guides and tutorials</p>
+                    </div>
+                </div>
+
+                <!-- Development Setup -->
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800">
+                        <i class="fas fa-laptop-code mr-3"></i>
+                        Development Environment Setup
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold mb-4">Prerequisites:</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li><i class="fab fa-git-alt text-orange-500 mr-2"></i>Git 2.25+</li>
+                                <li><i class="fab fa-github text-gray-800 mr-2"></i>GitHub CLI</li>
+                                <li><i class="fas fa-terminal text-green-500 mr-2"></i>Bash/PowerShell</li>
+                                <li><i class="fas fa-code text-blue-500 mr-2"></i>Text editor (VS Code recommended)</li>
+                                <li><i class="fas fa-tools text-purple-500 mr-2"></i>jq (JSON processor)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm">
+<pre>
+# Clone the repository
+git clone https://github.com/your-org/
+  github-security-pipeline.git
+
+# Change to project directory
+cd github-security-pipeline
+
+# Install development dependencies
+./scripts/setup-dev-environment.sh
+
+# Run tests
+./scripts/run-tests.sh
+
+# Validate configuration
+./validate-security.sh --dev
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pull Request Process -->
+                <div class="bg-white border border-gray-200 rounded-lg p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6 text-green-800">
+                        <i class="fas fa-code-branch mr-3"></i>
+                        Pull Request Process
+                    </h3>
+                    <div class="timeline-line pl-8 space-y-6">
+                        <div class="timeline-item relative">
+                            <h4 class="font-bold text-lg mb-2">1. Fork & Branch</h4>
+                            <p class="text-sm text-gray-600 mb-2">Fork the repository and create a feature branch with a descriptive name.</p>
+                            <code class="bg-gray-100 px-2 py-1 rounded text-xs">git checkout -b feature/secret-detection-enhancement</code>
+                        </div>
+                        <div class="timeline-item relative">
+                            <h4 class="font-bold text-lg mb-2">2. Develop & Test</h4>
+                            <p class="text-sm text-gray-600 mb-2">Make your changes, add tests, and ensure all existing tests pass.</p>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Follow coding standards</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Add comprehensive tests</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Update documentation</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item relative">
+                            <h4 class="font-bold text-lg mb-2">3. Commit & Push</h4>
+                            <p class="text-sm text-gray-600 mb-2">Use conventional commit messages and push your changes.</p>
+                            <code class="bg-gray-100 px-2 py-1 rounded text-xs">git commit -m "feat: enhance secret detection patterns"</code>
+                        </div>
+                        <div class="timeline-item relative">
+                            <h4 class="font-bold text-lg mb-2">4. Create Pull Request</h4>
+                            <p class="text-sm text-gray-600">Submit a pull request with a clear description of changes and benefits.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coding Standards -->
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <h4 class="font-bold text-lg mb-4 text-blue-800">
+                            <i class="fas fa-code mr-2"></i>
+                            Coding Standards
+                        </h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Use clear, descriptive variable names</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Add comments for complex logic</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Follow shell scripting best practices</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Use error handling and validation</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Maintain backward compatibility</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-6">
+                        <h4 class="font-bold text-lg mb-4 text-green-800">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Security Guidelines
+                        </h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><i class="fas fa-key text-purple-500 mr-2"></i>Never commit secrets or credentials</li>
+                            <li><i class="fas fa-lock text-purple-500 mr-2"></i>Validate all user inputs</li>
+                            <li><i class="fas fa-shield-alt text-purple-500 mr-2"></i>Use secure defaults</li>
+                            <li><i class="fas fa-audit text-purple-500 mr-2"></i>Follow security scanning rules</li>
+                            <li><i class="fas fa-update text-purple-500 mr-2"></i>Keep dependencies updated</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Changelog Section -->
+    <section id="changelog" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-history mr-3 text-green-600"></i>
+                Project Changelog
+            </h2>
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Version 2.0.0 -->
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-green-800">Version 2.0.0</h3>
+                        <div class="flex items-center space-x-4">
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">Latest</span>
+                            <span class="text-gray-500 text-sm">2024-01-15</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-bold text-green-600 mb-3">
+                                <i class="fas fa-plus-circle mr-2"></i>Added
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Enterprise-grade organization-wide deployment</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Advanced CodeQL integration with custom rules</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Multi-language dependency scanning support</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Real-time Slack/Teams notification system</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Automated security report generation</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>License compliance monitoring</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-blue-600 mb-3">
+                                <i class="fas fa-sync-alt mr-2"></i>Enhanced
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-arrow-up text-blue-500 mr-2"></i>Improved secret detection with 200+ patterns</li>
+                                <li><i class="fas fa-arrow-up text-blue-500 mr-2"></i>Enhanced performance with parallel scanning</li>
+                                <li><i class="fas fa-arrow-up text-blue-500 mr-2"></i>Better false positive management</li>
+                                <li><i class="fas fa-arrow-up text-blue-500 mr-2"></i>Streamlined setup automation</li>
+                                <li><i class="fas fa-arrow-up text-blue-500 mr-2"></i>Comprehensive documentation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Version 1.5.0 -->
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-blue-800">Version 1.5.0</h3>
+                        <span class="text-gray-500 text-sm">2023-11-20</span>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <h4 class="font-bold text-green-600 mb-3">
+                                <i class="fas fa-plus-circle mr-2"></i>Added
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Dependabot integration</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Container scanning</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>SARIF report support</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-orange-600 mb-3">
+                                <i class="fas fa-bug mr-2"></i>Fixed
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-wrench text-orange-500 mr-2"></i>Permission errors in workflows</li>
+                                <li><i class="fas fa-wrench text-orange-500 mr-2"></i>False positives in test files</li>
+                                <li><i class="fas fa-wrench text-orange-500 mr-2"></i>Configuration validation issues</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-purple-600 mb-3">
+                                <i class="fas fa-shield-alt mr-2"></i>Security
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-lock text-purple-500 mr-2"></i>Enhanced token handling</li>
+                                <li><i class="fas fa-lock text-purple-500 mr-2"></i>Improved secret patterns</li>
+                                <li><i class="fas fa-lock text-purple-500 mr-2"></i>Audit logging</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Version 1.0.0 -->
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-purple-800">Version 1.0.0 - Initial Release</h3>
+                        <span class="text-gray-500 text-sm">2023-10-01</span>
+                    </div>
+                    
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                        <h4 class="font-bold text-purple-800 mb-4">
+                            <i class="fas fa-rocket mr-2"></i>
+                            Foundation Release
+                        </h4>
+                        <ul class="text-sm space-y-2">
+                            <li><i class="fas fa-star text-purple-500 mr-2"></i>Core security scanning workflows</li>
+                            <li><i class="fas fa-star text-purple-500 mr-2"></i>Basic secret detection with Gitleaks</li>
+                            <li><i class="fas fa-star text-purple-500 mr-2"></i>GitHub Actions integration</li>
+                            <li><i class="fas fa-star text-purple-500 mr-2"></i>Manual setup documentation</li>
+                            <li><i class="fas fa-star text-purple-500 mr-2"></i>Basic notification system</li>
+                            <li><i class="fas fa-star text-purple-500 mr-2"></i>Single repository support</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Migration Guide -->
+                <div class="mt-12 bg-yellow-50 border border-yellow-200 rounded-lg p-8">
+                    <h3 class="text-xl font-bold text-yellow-800 mb-4">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Migration Guide for v2.0.0
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold mb-3">Breaking Changes:</h4>
+                            <ul class="text-sm space-y-1">
+                                <li><i class="fas fa-arrow-right text-yellow-600 mr-2"></i>Configuration file structure updated</li>
+                                <li><i class="fas fa-arrow-right text-yellow-600 mr-2"></i>Workflow file naming convention changed</li>
+                                <li><i class="fas fa-arrow-right text-yellow-600 mr-2"></i>New required permissions for organization features</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-3">Migration Steps:</h4>
+                            <ol class="text-sm space-y-1">
+                                <li><span class="font-medium text-yellow-700">1.</span> Backup existing configuration</li>
+                                <li><span class="font-medium text-yellow-700">2.</span> Run migration script: <code>./scripts/migrate-v2.sh</code></li>
+                                <li><span class="font-medium text-yellow-700">3.</span> Update organization permissions</li>
+                                <li><span class="font-medium text-yellow-700">4.</span> Test new workflows</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- License Section -->
+    <section id="license" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-balance-scale mr-3 text-purple-600"></i>
+                License & Legal Information
+            </h2>
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Main License -->
+                <div class="bg-gradient-to-r from-purple-50 to-indigo-100 rounded-lg p-8 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="w-24 h-24 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-certificate text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-purple-800">MIT License</h3>
+                        <p class="text-purple-600 mt-2">Open Source Security Pipeline</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <h4 class="font-bold text-lg mb-4">License Summary</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-bold text-green-600 mb-3">✅ Permissions</h5>
+                                <ul class="text-sm space-y-1">
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Commercial use</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Modification</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Distribution</li>
+                                    <li><i class="fas fa-check text-green-500 mr-2"></i>Private use</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-red-600 mb-3">❌ Limitations</h5>
+                                <ul class="text-sm space-y-1">
+                                    <li><i class="fas fa-times text-red-500 mr-2"></i>No liability</li>
+                                    <li><i class="fas fa-times text-red-500 mr-2"></i>No warranty</li>
+                                </ul>
+                                <h5 class="font-bold text-orange-600 mb-3 mt-4">⚠️ Conditions</h5>
+                                <ul class="text-sm space-y-1">
+                                    <li><i class="fas fa-info-circle text-orange-500 mr-2"></i>License and copyright notice</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Third-party Licenses -->
+                <div class="bg-gray-50 rounded-lg p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-800">
+                        <i class="fas fa-list-ul mr-3"></i>
+                        Third-Party Dependencies
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full bg-white border border-gray-200 rounded-lg">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Component</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">License</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Purpose</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Link</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-4 py-3 text-sm font-medium">Gitleaks</td>
+                                    <td class="px-4 py-3 text-sm">MIT</td>
+                                    <td class="px-4 py-3 text-sm">Secret detection</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <a href="https://github.com/zricethezav/gitleaks" class="text-blue-600 hover:underline">
+                                            <i class="fab fa-github mr-1"></i>GitHub
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-50">
+                                    <td class="px-4 py-3 text-sm font-medium">CodeQL</td>
+                                    <td class="px-4 py-3 text-sm">GitHub</td>
+                                    <td class="px-4 py-3 text-sm">Code analysis</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <a href="https://github.com/github/codeql" class="text-blue-600 hover:underline">
+                                            <i class="fab fa-github mr-1"></i>GitHub
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-3 text-sm font-medium">Dependabot</td>
+                                    <td class="px-4 py-3 text-sm">GitHub</td>
+                                    <td class="px-4 py-3 text-sm">Dependency updates</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <a href="https://github.com/dependabot" class="text-blue-600 hover:underline">
+                                            <i class="fab fa-github mr-1"></i>GitHub
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-50">
+                                    <td class="px-4 py-3 text-sm font-medium">GitHub Actions</td>
+                                    <td class="px-4 py-3 text-sm">GitHub ToS</td>
+                                    <td class="px-4 py-3 text-sm">CI/CD automation</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <a href="https://github.com/features/actions" class="text-blue-600 hover:underline">
+                                            <i class="fab fa-github mr-1"></i>GitHub
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Full License Text -->
+                <div class="bg-gray-900 text-green-400 rounded-lg p-6 font-mono text-sm">
+                    <h4 class="text-white font-bold mb-4">MIT License (Full Text)</h4>
+                    <div class="text-xs leading-relaxed">
+<pre>
+Copyright (c) 2024 Rodrigo Marins Piaba (Fanaticos4tech)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section id="support" class="py-16 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">
+                <i class="fas fa-life-ring mr-3 text-blue-600"></i>
+                Support & Resources
+            </h2>
+            <div class="max-w-6xl mx-auto">
+                
+                <!-- Support Channels -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="bg-white rounded-lg p-6 shadow-md text-center">
+                        <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fab fa-github text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">GitHub Issues</h3>
+                        <p class="text-sm text-gray-600 mb-4">Report bugs and request features</p>
+                        <a href="https://github.com/rodrigomarinsp/github-security-pipeline/issues" class="text-blue-600 hover:underline text-sm">
+                            Create Issue →
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md text-center">
+                        <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-envelope text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Email Support</h3>
+                        <p class="text-sm text-gray-600 mb-4">Direct technical assistance</p>
+                        <a href="mailto:rodrigomarinsp@gmail.com" class="text-blue-600 hover:underline text-sm">
+                            Send Email →
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md text-center">
+                        <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fab fa-discord text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Community Chat</h3>
+                        <p class="text-sm text-gray-600 mb-4">Join our Discord server</p>
+                        <a href="#" class="text-blue-600 hover:underline text-sm">
+                            Join Discord →
+                        </a>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md text-center">
+                        <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fab fa-instagram text-white text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Social Media</h3>
+                        <p class="text-sm text-gray-600 mb-4">Follow for updates</p>
+                        <a href="https://instagram.com/fanaticos4tech" class="text-blue-600 hover:underline text-sm">
+                            @fanaticos4tech →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6 text-center">
+                        <i class="fas fa-question-circle mr-3"></i>
+                        Frequently Asked Questions
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="border-b border-gray-200 pb-6">
+                            <h4 class="font-bold text-lg mb-3 text-blue-700">
+                                Q: Does this work with private repositories?
+                            </h4>
+                            <p class="text-gray-600">
+                                Yes! The security pipeline works with both public and private repositories. For private repositories, you'll need GitHub Advanced Security licensing to access features like secret scanning and CodeQL analysis.
+                            </p>
+                        </div>
+                        
+                        <div class="border-b border-gray-200 pb-6">
+                            <h4 class="font-bold text-lg mb-3 text-blue-700">
+                                Q: Can I customize the security rules?
+                            </h4>
+                            <p class="text-gray-600">
+                                Absolutely! The security pipeline is highly configurable. You can customize Gitleaks patterns, CodeQL queries, Dependabot settings, and notification preferences to match your organization's specific needs.
+                            </p>
+                        </div>
+                        
+                        <div class="border-b border-gray-200 pb-6">
+                            <h4 class="font-bold text-lg mb-3 text-blue-700">
+                                Q: What happens when a security issue is found?
+                            </h4>
+                            <p class="text-gray-600">
+                                When security issues are detected, the pipeline can block commits, send notifications to configured channels (Slack, Teams, email), create JIRA tickets, and generate detailed security reports for remediation.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-bold text-lg mb-3 text-blue-700">
+                                Q: Is this suitable for large organizations?
+                            </h4>
+                            <p class="text-gray-600">
+                                Yes! The pipeline is designed for enterprise use with organization-wide deployment, centralized policy management, compliance reporting, and integration with enterprise security tools like SIEM and SOAR platforms.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resources -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <h4 class="font-bold text-lg mb-4 text-green-600">
+                            <i class="fas fa-book mr-2"></i>
+                            Documentation
+                        </h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#installation" class="text-blue-600 hover:underline">Installation Guide</a></li>
+                            <li><a href="#configuration" class="text-blue-600 hover:underline">Configuration Reference</a></li>
+                            <li><a href="#troubleshooting" class="text-blue-600 hover:underline">Troubleshooting</a></li>
+                            <li><a href="#workflows" class="text-blue-600 hover:underline">Security Workflows</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <h4 class="font-bold text-lg mb-4 text-purple-600">
+                            <i class="fas fa-graduation-cap mr-2"></i>
+                            Learning Resources
+                        </h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#" class="text-blue-600 hover:underline">DevSecOps Best Practices</a></li>
+                            <li><a href="#" class="text-blue-600 hover:underline">GitHub Security Features</a></li>
+                            <li><a href="#" class="text-blue-600 hover:underline">Video Tutorials</a></li>
+                            <li><a href="#" class="text-blue-600 hover:underline">Webinar Series</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-md">
+                        <h4 class="font-bold text-lg mb-4 text-orange-600">
+                            <i class="fas fa-users mr-2"></i>
+                            Community
+                        </h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#contributing" class="text-blue-600 hover:underline">Contributing Guidelines</a></li>
+                            <li><a href="#" class="text-blue-600 hover:underline">Code of Conduct</a></li>
+                            <li><a href="#" class="text-blue-600 hover:underline">Security Research</a></li>
+                            <li><a href="#" class="text-blue-600 hover:underline">Bug Bounty Program</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-xl mb-4">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        Security Pipeline
+                    </h3>
+                    <p class="text-gray-400 text-sm">
+                        Enterprise-grade automated security for all your GitHub repositories. Built with ❤️ for the DevSecOps community.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#quick-start" class="text-gray-400 hover:text-white">Getting Started</a></li>
+                        <li><a href="#installation" class="text-gray-400 hover:text-white">Installation</a></li>
+                        <li><a href="#configuration" class="text-gray-400 hover:text-white">Configuration</a></li>
+                        <li><a href="#troubleshooting" class="text-gray-400 hover:text-white">Troubleshooting</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#contributing" class="text-gray-400 hover:text-white">Contributing</a></li>
+                        <li><a href="#changelog" class="text-gray-400 hover:text-white">Changelog</a></li>
+                        <li><a href="#license" class="text-gray-400 hover:text-white">License</a></li>
+                        <li><a href="#support" class="text-gray-400 hover:text-white">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/rodrigomarinsp" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="https://instagram.com/fanaticos4tech" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="mailto:rodrigomarinsp@gmail.com" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    © 2024 Rodrigo Marins Piaba (Fanaticos4tech). All rights reserved.
+                </p>
+                <p class="text-gray-400 text-sm mt-4 md:mt-0">
+                    Made with <i class="fas fa-heart text-red-500"></i> for secure development
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button onclick="scrollToTop()" class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-90 hover:opacity-100">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Add fade-in animation for sections
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Apply animation to workflow steps
+        document.querySelectorAll('.workflow-step').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

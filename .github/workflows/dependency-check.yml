@@ -1,0 +1,234 @@
+## Author: Author: Rodrigo Marins Piaba (Fanaticos4tech)
+
+## E-Mail: rodrigomarinsp@gmail.com / fanaticos4tech@gmail.com
+
+## GitHub: github.com/rodrigomarinsp/github-security-pipeline
+
+## Website: http://github.com/rodrigomarinsp/github-security-pipeline/index.html
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    paths:
+      - '**/*.json'
+      - '**/*.xml'
+      - '**/*.gradle'
+      - '**/requirements*.txt'
+      - '**/go.mod'
+      - '**/go.sum'
+      - '**/Gemfile'
+      - '**/Gemfile.lock'
+      - '**/pom.xml'
+      - '**/package.json'
+      - '**/package-lock.json'
+      - '**/yarn.lock'
+  pull_request:
+    branches: [ main, master, develop ]
+    paths:
+      - '**/*.json'
+      - '**/*.xml'
+      - '**/*.gradle'
+      - '**/requirements*.txt'
+      - '**/go.mod'
+      - '**/go.sum'
+      - '**/Gemfile'
+      - '**/Gemfile.lock'
+      - '**/pom.xml'
+      - '**/package.json'
+      - '**/package-lock.json'
+      - '**/yarn.lock'
+  schedule:
+    - cron: '0 4 * * 1' # Run every Monday at 4 AM UTC
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  dependency-check:
+    name: 🔍 Dependency Vulnerability Check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      pull-requests: write
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript, python, java, ruby, go]
+        include:
+          - language: javascript
+            patterns: "package*.json"
+            tool: npm
+          - language: python
+            patterns: "requirements*.txt,setup.py"
+            tool: pip
+          - language: java
+            patterns: "pom.xml,build.gradle"
+            tool: maven
+          - language: ruby
+            patterns: "Gemfile,Gemfile.lock"
+            tool: bundler
+          - language: go
+            patterns: "go.mod,go.sum"
+            tool: gomod
+    
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+        
+      - name: 🔍 Look for dependency files
+        id: check_files
+        run: |
+          IFS=',' read -ra PATTERNS <<< "${{ matrix.patterns }}"
+          for PATTERN in "${PATTERNS[@]}"; do
+            if compgen -G "$PATTERN" > /dev/null; then
+              echo "FOUND_FILES=true" >> $GITHUB_OUTPUT
+              break
+            fi
+          done
+          
+      - name: 📋 Setup Dependency Check
+        if: steps.check_files.outputs.FOUND_FILES == 'true'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+        
+      - name: 🧪 Run OWASP Dependency Check
+        if: steps.check_files.outputs.FOUND_FILES == 'true'
+        uses: dependency-check/Dependency-Check_Action@main
+        id: dependency-check
+        with:
+          project: '${{ github.repository }}'
+          path: '.'
+          format: 'SARIF'
+          out: '${{ github.workspace }}/reports' 
+          args: >
+            --enableExperimental
+            --exclude "**/*-test.jar"
+            --suppression .github/dependency-check-suppressions.xml
+            --failOnCVSS 7
+            --enableRetired
+      
+      - name: 📤 Upload Dependency Check results
+        if: steps.check_files.outputs.FOUND_FILES == 'true' && always()
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ github.workspace }}/reports/dependency-check-report.sarif
+          
+      - name: 🔄 Upload Dependency Check Report
+        if: steps.check_files.outputs.FOUND_FILES == 'true' && always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Dependency-Check-Report-${{ matrix.language }}
+          path: ${{ github.workspace }}/reports
+          
+      - name: 🚨 Comment PR with Vulnerability Summary
+        if: steps.check_files.outputs.FOUND_FILES == 'true' && github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            try {
+              // Basic parsing of the report to extract vulnerability counts
+              const reportPath = '${{ github.workspace }}/reports/dependency-check-report.json';
+              if (fs.existsSync(reportPath)) {
+                const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+                const dependencies = report.dependencies || [];
+                
+                // Count vulnerabilities by severity
+                const vulnCount = { critical: 0, high: 0, medium: 0, low: 0 };
+                dependencies.forEach(dep => {
+                  const vulns = dep.vulnerabilities || [];
+                  vulns.forEach(vuln => {
+                    const cvssScore = vuln.cvssv3 ? vuln.cvssv3.baseScore : (vuln.cvssv2 ? vuln.cvssv2.score : 0);
+                    if (cvssScore >= 9.0) vulnCount.critical++;
+                    else if (cvssScore >= 7.0) vulnCount.high++;
+                    else if (cvssScore >= 4.0) vulnCount.medium++;
+                    else if (cvssScore > 0) vulnCount.low++;
+                  });
+                });
+                
+                // Create comment body
+                let commentBody = ` ## 📦 Dependency Vulnerability Scan Results for ${{ matrix.language }} 
+                
+| Severity | Count | Threshold |
+|----------|-------|-----------|
+| 🔴 Critical | ${vulnCount.critical} | Must fix |
+| 🟠 High | ${vulnCount.high} | Should fix |
+| 🟡 Medium | ${vulnCount.medium} | Consider fixing |
+| 🟢 Low | ${vulnCount.low} | Be aware |
+
+`;
+                
+                // Add recommendations based on findings
+                if (vulnCount.critical > 0 || vulnCount.high > 0) {
+                  commentBody += `### ⚠️ Action Required
+This PR introduces dependencies with Critical or High vulnerabilities that should be addressed before merging.`;
+                } else if (vulnCount.medium > 0) {
+                  commentBody += `### ℹ️ Attention
+This PR introduces dependencies with Medium vulnerabilities that should be reviewed.`;
+                } else {
+                  commentBody += `### ✅ All Good
+No significant vulnerabilities detected in dependencies.`;
+                }
+                
+                // Post comment on PR
+                const { data: comments } = await github.rest.issues.listComments({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                });
+                
+                const botComment = comments.find(comment => {
+                  return comment.user.login === 'github-actions[bot]' && 
+                         comment.body.includes('Dependency Vulnerability Scan Results for ${{ matrix.language }}');
+                });
+                
+                if (botComment) {
+                  await github.rest.issues.updateComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: botComment.id,
+                    body: commentBody
+                  });
+                } else {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: context.issue.number,
+                    body: commentBody
+                  });
+                }
+              }
+            } catch (error) {
+              console.error('Error posting comment:', error);
+            }
+
+      - name: 📝 Publish scan summary
+        if: steps.check_files.outputs.FOUND_FILES == 'true' && always()
+        run: |
+          echo "### 📦 Dependency Check Results - ${{ matrix.language }}" >> $GITHUB_STEP_SUMMARY
+          echo "Dependency check completed using ${{ matrix.tool }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "${{ github.workspace }}/reports/dependency-check-report.json" ]; then
+            # Extract and display basic statistics from the report
+            CRITICAL=$(jq -r '.dependencies | map(.vulnerabilities // []) | flatten | map(select(.cvssv3.baseScore >= 9.0)) | length' ${{ github.workspace }}/reports/dependency-check-report.json)
+            HIGH=$(jq -r '.dependencies | map(.vulnerabilities // []) | flatten | map(select(.cvssv3.baseScore >= 7.0 and .cvssv3.baseScore < 9.0)) | length' ${{ github.workspace }}/reports/dependency-check-report.json)
+            MEDIUM=$(jq -r '.dependencies | map(.vulnerabilities // []) | flatten | map(select(.cvssv3.baseScore >= 4.0 and .cvssv3.baseScore < 7.0)) | length' ${{ github.workspace }}/reports/dependency-check-report.json)
+            LOW=$(jq -r '.dependencies | map(.vulnerabilities // []) | flatten | map(select(.cvssv3.baseScore > 0 and .cvssv3.baseScore < 4.0)) | length' ${{ github.workspace }}/reports/dependency-check-report.json)
+            
+            echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
+            echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔴 Critical | $CRITICAL |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟠 High | $HIGH |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟡 Medium | $MEDIUM |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟢 Low | $LOW |" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+              echo "⚠️ **Critical or High vulnerabilities detected!** Please review the full report." >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "No dependency report generated or no vulnerabilities found." >> $GITHUB_STEP_SUMMARY
+          fi
+        shell: bash
